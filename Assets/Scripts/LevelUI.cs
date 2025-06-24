@@ -1,6 +1,7 @@
 using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
+
 public class LevelUI : MonoBehaviour
 {
     public GameObject levelPanel;
@@ -9,6 +10,8 @@ public class LevelUI : MonoBehaviour
 
     private void Start()
     {
+        // Set levelNumber to the current scene's build index + 1 (if you want Level 1 for build index 0)
+        levelNumber = SceneManager.GetActiveScene().buildIndex + 1;
         UpdateLevelText();
     }
 
