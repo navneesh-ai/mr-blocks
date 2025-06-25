@@ -9,10 +9,20 @@ public class Player : MonoBehaviour
 
     private Rigidbody2D rb;
 
+    private SoundManager soundManager;
+
+    private bool isDead = false;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        soundManager = FindObjectOfType<SoundManager>();
+        if (soundManager == null)
+        {
+            Debug.LogError("SoundManager not found in the scene.");
+        }
+        isDead = false;
     }
 
     // Update is called once per frame after the Start function
@@ -43,6 +53,7 @@ public class Player : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D other)
     {
+        //Debug.Log("Collided with: " + other.gameObject.name);
         if (other.gameObject.CompareTag("Obstacle"))
         {
             PlayerDied();
@@ -51,6 +62,9 @@ public class Player : MonoBehaviour
 
    private void PlayerDied()
     {
+        if (isDead) return;
+        isDead = true;
+        soundManager.PlayGameOverAudio();
         LevelManager.Instance.OnPlayerDeath();
     }
 
@@ -58,13 +72,14 @@ public class Player : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Finish"))
         {
-            Debug.Log("current scene index: " + LevelManager.Instance.CurrentSceneIndex);
+          //  Debug.Log("current scene index: " + LevelManager.Instance.CurrentSceneIndex);
             LevelComplete();
         }
     }
 
     private void LevelComplete()
     {
+        soundManager.PlayLevelCompleteAudio();
         LevelManager.Instance.OnLevelComplete();
     }
 
